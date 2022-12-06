@@ -1,56 +1,61 @@
-const {
-  isExistsTimeZone,
-  getTimeZone,
-  getResultWithTimeZone,
-  getResult,
-} = require("./helpers");
+const helpers = require("./helpers");
 
 function mainV2(inputData) {
-  let date = parseData(inputData);
+  let date = helpers.parseData(inputData);
   let parsedDate = new Date(date);
   if (parsedDate != "Invalid Date") {
     return parseValidDate(date);
   }
-  if (isExistsTimeZone(date)) {
-    const timeZone = getTimeZone(date);
+  if (helpers.isExistsTimeZone(date)) {
+    const timeZone = helpers.getTimeZone(date);
     const newDate = date.slice(0, date.length - 6);
-    let res = parseValidDate(newDate);
-    return getResultWithTimeZone(res, timeZone);
+    const res = parseValidDate(newDate);
+    return helpers.getResultWithTimeZone(res, timeZone);
   }
   return parseInvalidDate(date);
 }
 
-// Сначала лучше работать с более менее корректными данными
-
 function parseValidDate(date) {
-  // console.log(date);
-  // console.log(new Date(date).toISOString());
   if (date.length === 10) {
-    return new Date(date).toISOString();
+    return helpers.getResult(date);
   }
-  if (isExistsTimeZone(date)) {
-    const timeZone = getTimeZone(date);
+  if (helpers.isExistsTimeZone(date)) {
+    const timeZone = helpers.getTimeZone(date);
     const newDate = date.slice(0, date.length - 6) + "Z";
-    // console.log(newDate);
-    // console.log(suffix);
-    // console.log(new Date(newDate).toISOString());
     const res = new Date(newDate).toISOString();
-    return getResultWithTimeZone(res, timeZone);
+    return helpers.getResultWithTimeZone(res, timeZone);
   }
   if (date[date.length - 1] === "Z") {
-    return new Date(date).toISOString();
+    return helpers.getResult(date);
   }
   const newDate = date + "Z";
-  return new Date(newDate).toISOString();
+  return helpers.getResult(newDate);
 }
 
-// function parseInvalidDate(date) {
-//   // const
-// }
-
-function parseData(inputData) {
-  const { src, options } = inputData;
-  return src[options];
+function parseInvalidDate(date) {
+  let arr = date.split(" ");
+  // console.log(arr);
+  let res = "";
+  for (const el of arr) {
+    if (el.search(/\d/) != -1) {
+      res += `${el} `;
+    }
+    if (helpers.monthNumber.get(el) || helpers.shortMonthNumber.get(el)) {
+      res += helpers.monthNumber.get(el)
+        ? helpers.monthNumber.get(el)
+        : helpers.shortMonthNumber.get(el);
+    }
+  }
+  if (helpers.checkYear(res.slice(0, 4))) {
+    return parseValidDate(res);
+  }
+  console.log(res);
+  // console.log(parseValidDate(res));
+  // try {
+  //   console.log(parseValidDate(res));
+  //   return parseValidDate(res);
+  // } catch (err) {}
+  return "1";
 }
 
 module.exports = mainV2;
