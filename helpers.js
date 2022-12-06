@@ -66,7 +66,14 @@ function getResult(date) {
 }
 
 function checkYear(year) {
-  return !(year.includes("-") || year.includes(".") || year.includes("/"));
+  return !(
+    year.includes("-") ||
+    year.includes(".") ||
+    year.includes("/") ||
+    year.includes('"') ||
+    year.includes("«") ||
+    year.includes("'")
+  );
 }
 
 module.exports = {

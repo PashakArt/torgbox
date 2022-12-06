@@ -38,7 +38,7 @@ function parseInvalidDate(date) {
   let res = "";
   for (const el of arr) {
     if (el.search(/\d/) != -1) {
-      res += `${el} `;
+      res += el.length > 5 ? `${el} ` : el;
     }
     if (helpers.monthNumber.get(el) || helpers.shortMonthNumber.get(el)) {
       res += helpers.monthNumber.get(el)
@@ -46,10 +46,16 @@ function parseInvalidDate(date) {
         : helpers.shortMonthNumber.get(el);
     }
   }
+  console.log(res);
+
   if (helpers.checkYear(res.slice(0, 4))) {
     return parseValidDate(res);
   }
-  console.log(res);
+  // console.log(date, " - ", res.trim());
+
+  // if (helpers.checkYear(res.slice(0, 4))) {
+  //   // let date = res.split
+  // }
   // console.log(parseValidDate(res));
   // try {
   //   console.log(parseValidDate(res));
