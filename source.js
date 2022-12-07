@@ -66,10 +66,12 @@ function parseValidDate(date) {
 
 function parseInvalidDate(date) {
   let res = "";
+  date = helpers.removeQuotes(date);
   const regDateStartYear = /\d{4}(-|\/|\.)\d{2}\1\d{2} /;
   const regDateStartDays = /\d{2}(-|\/|\.)\d{2}\1\d{4} /;
-  const regDateWithMonth = /\d{1}(\ )/;
-  const arr = [regDateStartYear, regDateStartDays];
+  const regDateWithWordMonth =
+    /(0?[1-9]|[12][0-9]|3[01]) (янв(?:аря|\.)?|фев(?:раля|\.)?|мар(?:та|\.)?|апр(?:еля|\.)?|мая|июн(?:я|\.)?|июл(?:я|\.)?|авг(?:уста|\.)?|сен(?:тября|\.)?|окт(?:ября|\.)?|ноя(?:бря|\.)?|дек(?:абря|\.)?) (\d{4})/;
+  const arr = [regDateStartYear, regDateStartDays, regDateWithWordMonth];
   const regTime = /\d{2}(\:)\d{2}/;
   for (const el of arr) {
     const matchedDate = date.match(el);
@@ -81,12 +83,17 @@ function parseInvalidDate(date) {
       }
     }
   }
+  // if name of month then 3 index 100% is char
+  if (res[3].search(/\d/) === -1) {
+    res = helpers.getCountDaysInMonth(res);
+    console.log(res);
+  }
   if (helpers.isFirstYear(res)) {
     return parseValidDate(res);
   }
   const [day, month, year, hour, seconds] = helpers.getSplitDate(res);
   res = new Date(year, month, day, hour, seconds);
-  console.log(res, parseValidDate(res));
+  // console.log(res, parseValidDate(res));
   return parseValidDate(res);
 
   // const newDate = new Date(res)

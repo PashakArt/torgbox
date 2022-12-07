@@ -1,20 +1,3 @@
-// function main(inputData) {
-//   let date = parseData(inputData);
-//   let parsedDate = new Date(date);
-//   if (parsedDate != "Invalid Date") {
-//     console.log(parseValidDate(date));
-//     return parseValidDate(date);
-//   }
-//   return "1";
-//   // return parseInvalidDate(date);
-// }
-
-// function parseValidDateV2(date, suffix) {
-//   const newDate = date.slice(0, date.length - 6) + "Z";
-//   const res = new Date(newDate).toISOString();
-//   return res.slice(0, res.length - 1) + suffix;
-// }
-
 const monthNumber = new Map([
   ["января", ".01."],
   ["февраля", ".02."],
@@ -43,6 +26,21 @@ const shortMonthNumber = new Map([
   ["ноя.", ".11."],
   ["дек.", ".12."],
 ]);
+
+function getCountDaysInMonth(date) {
+  let days = date.split(" ")[0];
+  const month = date.split(" ")[1];
+  const year = date.split(" ")[2];
+  const countDays = monthNumber.get(month)
+    ? monthNumber.get(month)
+    : shortMonthNumber.get(month);
+  console.log(days, month, year);
+  console.log(month);
+  if (days.length == 1) {
+    days = `0${days}`;
+  }
+  return `${days}${countDays}${year}`;
+}
 
 function parseData(inputData) {
   const { src, options } = inputData;
@@ -84,22 +82,20 @@ function getSplitDate(date) {
   const year = date.slice(6, 10);
   const hour = date.slice(11, 13);
   const seconds = date.slice(14);
-  console.log(date, "-", day, month, year, hour, seconds);
   return [day, month, year, hour, seconds];
 }
 
-// function getCountDaysInMonth(date) {
-//   let date = date.split(" ");
-//   for (const el of date) {
-//     if (monthNumber.get(el) || shortMonthNumber.get(el)) {
-//       const newEl = helpers.monthNumber.get(el)
-//         ? helpers.monthNumber.get(el)
-//         : helpers.shortMonthNumber.get(el);
-//       date.replace(el, newEl);
-//     }
-//   }
-//   return date;
-// }
+function removeQuotes(date) {
+  const quotes = ['"', '"', "»", "«"];
+  date = date.replaceAll("'", "");
+  date = date.replaceAll('"', "");
+  date = date.replaceAll("»", "");
+  date = date.replaceAll("«", "");
+  // for (const quote of quotes) {
+  //   date.replaceAll(quote, "");
+  // }
+  return date;
+}
 
 module.exports = {
   isExistsTimeZone,
@@ -111,4 +107,6 @@ module.exports = {
   shortMonthNumber,
   isFirstYear,
   getSplitDate,
+  removeQuotes,
+  getCountDaysInMonth,
 };
