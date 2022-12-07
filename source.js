@@ -32,36 +32,68 @@ function parseValidDate(date) {
   return helpers.getResult(newDate);
 }
 
+// function parseInvalidDate(date) {
+//   let arr = date.split(" ");
+//   // console.log(arr);
+//   let res = "";
+//   for (const el of arr) {
+//     if (el.search(/\d/) != -1) {
+//       res += el.length > 5 ? `${el} ` : el;
+//     }
+//     if (helpers.monthNumber.get(el) || helpers.shortMonthNumber.get(el)) {
+//       res += helpers.monthNumber.get(el)
+//         ? helpers.monthNumber.get(el)
+//         : helpers.shortMonthNumber.get(el);
+//     }
+//   }
+//   console.log(res);
+
+//   if (helpers.checkYear(res.slice(0, 4))) {
+//     return parseValidDate(res);
+//   }
+//   // console.log(date, " - ", res.trim());
+
+//   // if (helpers.checkYear(res.slice(0, 4))) {
+//   //   // let date = res.split
+//   // }
+//   // console.log(parseValidDate(res));
+//   // try {
+//   //   console.log(parseValidDate(res));
+//   //   return parseValidDate(res);
+//   // } catch (err) {}
+//   return "1";
+// }
+
 function parseInvalidDate(date) {
-  let arr = date.split(" ");
-  // console.log(arr);
   let res = "";
+  const regDateStartYear = /\d{4}(-|\/|\.)\d{2}\1\d{2} /;
+  const regDateStartDays = /\d{2}(-|\/|\.)\d{2}\1\d{4} /;
+  const regDateWithMonth = /\d{1}(\ )/;
+  const arr = [regDateStartYear, regDateStartDays];
+  const regTime = /\d{2}(\:)\d{2}/;
   for (const el of arr) {
-    if (el.search(/\d/) != -1) {
-      res += el.length > 5 ? `${el} ` : el;
-    }
-    if (helpers.monthNumber.get(el) || helpers.shortMonthNumber.get(el)) {
-      res += helpers.monthNumber.get(el)
-        ? helpers.monthNumber.get(el)
-        : helpers.shortMonthNumber.get(el);
+    const matchedDate = date.match(el);
+    if (matchedDate) {
+      res += matchedDate[0];
+      const matchedTime = date.match(regTime);
+      if (matchedTime) {
+        res += matchedTime[0];
+      }
     }
   }
-  console.log(res);
-
-  if (helpers.checkYear(res.slice(0, 4))) {
+  if (helpers.isFirstYear(res)) {
     return parseValidDate(res);
   }
-  // console.log(date, " - ", res.trim());
+  const [day, month, year, hour, seconds] = helpers.getSplitDate(res);
+  res = new Date(year, month, day, hour, seconds);
+  console.log(res, parseValidDate(res));
+  return parseValidDate(res);
 
-  // if (helpers.checkYear(res.slice(0, 4))) {
-  //   // let date = res.split
-  // }
-  // console.log(parseValidDate(res));
-  // try {
-  //   console.log(parseValidDate(res));
-  //   return parseValidDate(res);
-  // } catch (err) {}
-  return "1";
+  // const newDate = new Date(res)
+  // console.log(res, "-", parseValidDate(res));
+  // return parseValidDate(res);
+  // console.log(date, "-", date.match(regOnlyDateStartYear));
+  // console.log(date, "-", date.match(regOnlyDateStartDays));
 }
 
 module.exports = mainV2;

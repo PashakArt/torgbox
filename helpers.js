@@ -65,8 +65,9 @@ function getResult(date) {
   return new Date(date).toISOString();
 }
 
-function checkYear(year) {
-  return !(
+function isFirstYear(date) {
+  const year = date.slice(0, 4);
+  const isYear = !(
     year.includes("-") ||
     year.includes(".") ||
     year.includes("/") ||
@@ -74,7 +75,31 @@ function checkYear(year) {
     year.includes("«") ||
     year.includes("'")
   );
+  return isYear;
 }
+
+function getSplitDate(date) {
+  const day = date.slice(0, 2);
+  const month = date.slice(3, 5) - 1;
+  const year = date.slice(6, 10);
+  const hour = date.slice(11, 13);
+  const seconds = date.slice(14);
+  console.log(date, "-", day, month, year, hour, seconds);
+  return [day, month, year, hour, seconds];
+}
+
+// function getCountDaysInMonth(date) {
+//   let date = date.split(" ");
+//   for (const el of date) {
+//     if (monthNumber.get(el) || shortMonthNumber.get(el)) {
+//       const newEl = helpers.monthNumber.get(el)
+//         ? helpers.monthNumber.get(el)
+//         : helpers.shortMonthNumber.get(el);
+//       date.replace(el, newEl);
+//     }
+//   }
+//   return date;
+// }
 
 module.exports = {
   isExistsTimeZone,
@@ -84,5 +109,6 @@ module.exports = {
   parseData,
   monthNumber,
   shortMonthNumber,
-  checkYear,
+  isFirstYear,
+  getSplitDate,
 };
