@@ -3,7 +3,7 @@ const helpers = require("./helpers");
 function main(inputData) {
   let date = helpers.parseData(inputData);
   let parsedDate = new Date(date);
-  if (parsedDate != "Invalid Date") {
+  if (!isNaN(parsedDate)) {
     return helpers.parseValidDate(date);
   }
   if (helpers.isExistsTimeZone(date)) {
