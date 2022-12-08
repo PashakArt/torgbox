@@ -65,15 +65,13 @@ function getResult(date) {
 
 function isFirstYear(date) {
   const year = date.slice(0, 4);
-  const isYear = !(
-    year.includes("-") ||
-    year.includes(".") ||
-    year.includes("/") ||
-    year.includes('"') ||
-    year.includes("«") ||
-    year.includes("'")
-  );
-  return isYear;
+  const containerSymbols = ["-", ".", "/", '"', "«", "'"];
+  for (const symbol of containerSymbols) {
+    if (year.includes(symbol)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function getSplitDate(date) {
