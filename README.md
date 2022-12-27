@@ -1,4 +1,4 @@
-# trogbox
+# Date converter
 
 Module for converting various date formats to ISO 8601
 
